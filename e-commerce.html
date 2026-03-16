@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eCommerce Demo — Gumlet Video</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070a14;
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.7);
+        --card: rgba(255, 255, 255, 0.04);
+        --stroke: rgba(255, 255, 255, 0.1);
+        --shadow: 0 16px 60px rgba(0, 0, 0, 0.55);
+        --accent: #6c5cff;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background: radial-gradient(900px 600px at 15% 0%, rgba(108, 92, 255, 0.18), transparent 60%),
+          radial-gradient(900px 600px at 80% 10%, rgba(23, 211, 184, 0.12), transparent 55%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        padding: 22px 18px 80px 18px;
+      }
+
+      .container {
+        width: min(1200px, 100%);
+        margin: 0 auto;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 8px 0 18px 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .brand__dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent), rgba(23, 211, 184, 0.95));
+      }
+
+      .hero {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--stroke);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px 0;
+        font-size: 34px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 14px;
+      }
+
+      .generator {
+        margin-top: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--stroke);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+
+      .generator h2 {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        letter-spacing: -0.01em;
+      }
+
+      .generator p {
+        margin: 0 0 12px 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .formgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0 0 6px 0;
+      }
+
+      .input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--stroke);
+        background: rgba(0, 0, 0, 0.35);
+        color: rgba(255, 255, 255, 0.92);
+        outline: none;
+      }
+
+      .input:focus {
+        border-color: rgba(108, 92, 255, 0.7);
+        box-shadow: 0 0 0 4px rgba(108, 92, 255, 0.18);
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      .btn--primary {
+        background: linear-gradient(135deg, rgba(108, 92, 255, 0.92), rgba(23, 211, 184, 0.72));
+        border-color: rgba(255, 255, 255, 0.16);
+        color: rgba(255, 255, 255, 0.98);
+      }
+
+      .code {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 140px;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+        font-size: 12px;
+        line-height: 1.45;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid var(--stroke);
+        background: rgba(0, 0, 0, 0.35);
+        color: rgba(255, 255, 255, 0.92);
+        outline: none;
+        grid-column: 1 / -1;
+      }
+
+      .status {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        font-size: 12px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+      }
+
+      .img {
+        aspect-ratio: 4 / 3;
+        background: linear-gradient(135deg, rgba(108, 92, 255, 0.2), rgba(23, 211, 184, 0.12));
+      }
+
+      .content {
+        padding: 12px;
+      }
+
+      .name {
+        margin: 0 0 6px 0;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .price {
+        margin-top: 10px;
+        font-weight: 800;
+      }
+
+      @media (max-width: 1060px) {
+        .grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 820px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 520px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .formgrid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="./dist/gumlet-ecommerce-video.min.js?v=adadd" async></script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="container">
+        <header class="nav">
+          <div class="brand"><span class="brand__dot"></span> eCommerce Video</div>
+          <div><a href="./index.html">All demos</a></div>
+        </header>
+
+        <section class="hero">
+          <div>
+            <h1>Category: Sneakers</h1>
+            <p>
+              This page simulates a product listing experience. The video loads on page load in the bottom corner
+              and can be dismissed with the close button.
+            </p>
+            <div class="filters">
+              <span class="chip">All</span>
+              <span class="chip">New</span>
+              <span class="chip">Running</span>
+              <span class="chip">Lifestyle</span>
+              <span class="chip">Sale</span>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="img"></div>
+              <div class="content">
+                <p class="name">Featured drop</p>
+                <p class="meta">Lightweight. Breathable. Built for comfort.</p>
+                <div class="price">From $89</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" aria-label="Product listing">
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Sprint Pro</p><p class="meta">Daily runner</p><div class="price">$109</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Urban Lite</p><p class="meta">Streetwear</p><div class="price">$99</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Cloud Max</p><p class="meta">Extra cushioning</p><div class="price">$129</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Retro 88</p><p class="meta">Classic look</p><div class="price">$119</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Trail Edge</p><p class="meta">Outdoor</p><div class="price">$139</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Flex Knit</p><p class="meta">Ultra light</p><div class="price">$89</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Commuter</p><p class="meta">Everyday</p><div class="price">$79</div></div></article>
+          <article class="card"><div class="img"></div><div class="content"><p class="name">Prime Run</p><p class="meta">Performance</p><div class="price">$149</div></div></article>
+        </section>
+
+        <section class="generator" aria-label="Embed generator">
+          <h2>Embed generator</h2>
+          <p>Generate an eCommerce PIP embed snippet and copy it. The live PIP preview updates automatically.</p>
+
+          <div class="formgrid">
+            <div class="field">
+              <label for="videoId">Video asset ID</label>
+              <input id="videoId" class="input" type="text" value="69b8165cdc37184fc7cb2c7a" />
+            </div>
+
+            <div class="field">
+              <label for="corner">Corner</label>
+              <select id="corner" class="input">
+                <option value="bottom-right" selected>bottom-right</option>
+                <option value="bottom-left">bottom-left</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="aspectRatio">Aspect ratio</label>
+              <input id="aspectRatio" class="input" type="text" value="2160:4096" placeholder="9:16 / 16:9 / 1:1" />
+            </div>
+
+            <textarea id="embedCode" class="code" readonly></textarea>
+
+            <div class="actions">
+              <button id="generateBtn" class="btn btn--primary" type="button">Generate embed</button>
+              <button id="copyBtn" class="btn" type="button">Copy</button>
+              <span id="status" class="status"></span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div
+        id="pipPreview"
+        class="gumlet-ecommerce-video"
+        data-embed-src="https://play.gumlet.io/embed/69b8165cdc37184fc7cb2c7a"
+        data-corner="bottom-right"
+        data-aspect-ratio="2160:4096"
+      ></div>
+    </main>
+
+    <script type="module">
+      const pipEl = document.getElementById('pipPreview');
+      const videoIdEl = document.getElementById('videoId');
+      const cornerEl = document.getElementById('corner');
+      const aspectRatioEl = document.getElementById('aspectRatio');
+      const embedCodeEl = document.getElementById('embedCode');
+      const generateBtn = document.getElementById('generateBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const statusEl = document.getElementById('status');
+
+      function buildEmbedSrc(videoId) {
+        const base = `https://play.gumlet.io/embed/${encodeURIComponent(videoId)}`;
+        return base;
+      }
+
+      function buildEmbedCode(embedSrc, corner, aspectRatio) {
+        const attrs = [
+          `class=\"gumlet-ecommerce-video\"`,
+          `data-embed-src=\"${embedSrc}\"`,
+          `data-corner=\"${corner}\"`,
+        ];
+
+        if (aspectRatio && aspectRatio.trim().length > 0) {
+          attrs.push(`data-aspect-ratio=\"${aspectRatio.trim()}\"`);
+        }
+
+        const scriptUrl = document
+          .querySelector('script[src*="gumlet-ecommerce-video.min.js"]')
+          ?.getAttribute('src');
+        const closeScript = '</scr' + 'ipt>';
+        const scriptLine = scriptUrl
+          ? `<script src=\"${scriptUrl}\" async>${closeScript}`
+          : `<script src=\"https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.0/dist/gumlet-ecommerce-video.min.js\" async>${closeScript}`;
+
+        return `<div ${attrs.join(' ')}></div>\n\n${scriptLine}`;
+      }
+
+      async function waitForAddon() {
+        for (let i = 0; i < 120; i += 1) {
+          if (window.GumletEcommerceVideo?.init) return window.GumletEcommerceVideo;
+          await new Promise((r) => setTimeout(r, 50));
+        }
+        return null;
+      }
+
+      async function render() {
+        const videoId = videoIdEl.value.trim();
+        const corner = cornerEl.value;
+        const aspectRatio = aspectRatioEl.value.trim();
+
+        if (!videoId) return;
+
+        const embedSrc = buildEmbedSrc(videoId);
+        pipEl.dataset.embedSrc = embedSrc;
+        pipEl.dataset.corner = corner;
+        pipEl.dataset.aspectRatio = aspectRatio;
+
+        embedCodeEl.value = buildEmbedCode(embedSrc, corner, aspectRatio);
+
+        const addon = await waitForAddon();
+        if (!addon) return;
+
+        if (pipEl.__gumletEcommerceVideoInstance?.destroy) {
+          pipEl.__gumletEcommerceVideoInstance.destroy();
+          pipEl.__gumletEcommerceVideoInstance = null;
+        }
+        addon.init(pipEl);
+      }
+
+      generateBtn.addEventListener('click', () => {
+        statusEl.textContent = '';
+        render();
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(embedCodeEl.value);
+          statusEl.textContent = 'Copied';
+          setTimeout(() => {
+            statusEl.textContent = '';
+          }, 1200);
+        } catch {
+          statusEl.textContent = 'Copy failed';
+        }
+      });
+
+      videoIdEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          render();
+        }
+      });
+
+      cornerEl.addEventListener('change', () => render());
+      aspectRatioEl.addEventListener('input', () => render());
+
+      render();
+    </script>
+  </body>
+</html>

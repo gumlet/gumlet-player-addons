@@ -1,11 +1,11 @@
 import playerjs from '@gumlet/player.js';
-import cssText from './embed.css?inline';
+import cssText from './modal-player.css?inline';
 
 function ensureStylesInjected() {
-  if (document.getElementById('gumlet-addon-embed-styles')) return;
+  if (document.getElementById('gumlet-modal-player-styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'gumlet-addon-embed-styles';
+  style.id = 'gumlet-modal-player-styles';
   style.textContent = cssText;
   document.head.appendChild(style);
 }
@@ -44,7 +44,7 @@ function mount(rootEl, options = {}) {
   const backdropOpacity = options.backdropOpacity ?? rootEl.dataset.backdropOpacity;
 
   if (!embedSrc) {
-    throw new Error('[GumletAddon] Missing data-embed-src');
+    throw new Error('[GumletModalPlayer] Missing data-embed-src');
   }
 
   rootEl.classList.add('gumlet-addon');
@@ -123,11 +123,10 @@ function mount(rootEl, options = {}) {
 
     gumletPlayer = new playerjs.playerjs.Player(iframe);
     gumletPlayer.on('ready', async () => {
-      console.log('gumletPlayer ready');
       try {
-        if (gumletPlayer.supports('method', 'play')) {
-          await gumletPlayer.play();
-        }
+        if (gumletPlayer.supports('method', 'setVolume')) await gumletPlayer.setVolume(1);
+        if (gumletPlayer.supports('method', 'unmute')) await gumletPlayer.unmute();
+        if (gumletPlayer.supports('method', 'play')) await gumletPlayer.play();
       } catch {
         // Best-effort: browser autoplay policies may block sound.
       }
@@ -181,26 +180,26 @@ function mount(rootEl, options = {}) {
 function scan(selector = '.gumlet-addon') {
   const nodes = Array.from(document.querySelectorAll(selector));
   return nodes.map((el) => {
-    if (el.__gumletAddonInstance) return el.__gumletAddonInstance;
+    if (el.__gumletModalPlayerInstance) return el.__gumletModalPlayerInstance;
     const instance = mount(el);
-    el.__gumletAddonInstance = instance;
+    el.__gumletModalPlayerInstance = instance;
     return instance;
   });
 }
 
-const GumletAddon = {
+const GumletModalPlayer = {
   init(rootEl, options) {
-    if (!rootEl) throw new Error('[GumletAddon] init(rootEl) requires a root element');
-    if (rootEl.__gumletAddonInstance) return rootEl.__gumletAddonInstance;
+    if (!rootEl) throw new Error('[GumletModalPlayer] init(rootEl) requires a root element');
+    if (rootEl.__gumletModalPlayerInstance) return rootEl.__gumletModalPlayerInstance;
     const instance = mount(rootEl, options);
-    rootEl.__gumletAddonInstance = instance;
+    rootEl.__gumletModalPlayerInstance = instance;
     return instance;
   },
   scan,
 };
 
 if (typeof window !== 'undefined') {
-  window.GumletAddon = GumletAddon;
+  window.GumletModalPlayer = GumletModalPlayer;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => scan());
@@ -209,4 +208,4 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export default GumletAddon;
+export default GumletModalPlayer;
