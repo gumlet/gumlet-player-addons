@@ -31,7 +31,7 @@ Host that file on your CDN and use the snippet below.
   data-modal-bg="rgba(0,0,0,0.6)"
 ></div>
 
-<script src="https://cdn.example.com/gumlet-addon-embed.min.js" async></script>
+<script src="https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.1.0/dist/gumlet-addon-embed.min.js" async></script>
 ```
 
 Optional:
