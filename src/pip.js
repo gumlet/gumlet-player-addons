@@ -39,6 +39,52 @@ function parseAspectRatio(value) {
   return { w, h };
 }
 
+function parseBoolean(value) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value !== 'string') return false;
+  const raw = value.trim().toLowerCase();
+  if (raw === 'true' || raw === '1' || raw === 'yes' || raw === 'on') return true;
+  return false;
+}
+
+function parseOptionalBoolean(value) {
+  console.log(value)
+  if (typeof value === 'boolean') return { hasValue: true, value };
+  if (typeof value !== 'string') return { hasValue: false, value: false };
+  const raw = value.trim().toLowerCase();
+  if (raw === 'true' || raw === '1' || raw === 'yes' || raw === 'on') {
+    return { hasValue: true, value: true };
+  }
+  if (raw === 'false' || raw === '0' || raw === 'no' || raw === 'off') {
+    return { hasValue: true, value: false };
+  }
+  return { hasValue: true, value: false };
+}
+
+function safeStorageGet(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // ignore
+  }
+}
+
+function safeStorageRemove(key) {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // ignore
+  }
+}
+
 function mount(rootEl, options = {}) {
   ensureStylesInjected();
 
@@ -47,8 +93,42 @@ function mount(rootEl, options = {}) {
   const aspectRatioRaw = options.aspectRatio ?? rootEl.dataset.aspectRatio ?? '9:16';
   const aspectRatio = parseAspectRatio(aspectRatioRaw) ?? { w: 9, h: 16 };
 
+  const persistVideoData = parseOptionalBoolean(rootEl.dataset.persistVideo);
+  const persistDismissData = parseOptionalBoolean(rootEl.dataset.persistDismiss);
+  let persistVideo = true;
+  if (options.persistVideo != null) {
+    persistVideo = options.persistVideo;
+  } else if (persistVideoData.hasValue) {
+    persistVideo = persistVideoData.value;
+  } else if (options.persistDismiss != null) {
+    persistVideo = !options.persistDismiss;
+  } else if (persistDismissData.hasValue) {
+    persistVideo = !persistDismissData.value;
+  }
+  const dismissKey =
+    options.dismissKey ?? rootEl.dataset.dismissKey ?? `gumlet-ecommerce-video:dismissed:${embedSrc ?? ''}`;
+
   if (!embedSrc) {
     throw new Error('[GumletEcommerceVideo] Missing data-embed-src');
+  }
+
+  if (
+    (persistVideoData.hasValue && persistVideoData.value === true) ||
+    (persistDismissData.hasValue && persistDismissData.value === false)
+  ) {
+    safeStorageRemove(dismissKey);
+  }
+
+  if (!persistVideo) {
+    const dismissed = safeStorageGet(dismissKey) === '1';
+    if (dismissed) {
+      rootEl.replaceChildren();
+      return {
+        destroy() {
+          rootEl.replaceChildren();
+        },
+      };
+    }
   }
 
   rootEl.classList.add('gumlet-ecommerce-video');
@@ -78,6 +158,7 @@ function mount(rootEl, options = {}) {
   rootEl.appendChild(pip);
 
   function onClose() {
+    if (!persistVideo) safeStorageSet(dismissKey, '1');
     pip.remove();
   }
 

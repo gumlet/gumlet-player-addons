@@ -215,6 +215,9 @@
 
       .img {
         aspect-ratio: 4 / 3;
+        width: 100%;
+        display: block;
+        object-fit: cover;
         background: linear-gradient(135deg, rgba(108, 92, 255, 0.2), rgba(23, 211, 184, 0.12));
       }
 
@@ -268,7 +271,7 @@
       }
     </style>
 
-    <script src="./dist/gumlet-ecommerce-video.min.js?v=adadd" async></script>
+    <script src="./dist/gumlet-ecommerce-video.min.js?v=12dsd" async></script>
   </head>
   <body>
     <main class="page">
@@ -280,7 +283,7 @@
 
         <section class="hero">
           <div>
-            <h1>Category: Sneakers</h1>
+            <h1>Category: Shirts &amp; Tees</h1>
             <p>
               This page simulates a product listing experience. The video loads on page load in the bottom corner
               and can be dismissed with the close button.
@@ -288,32 +291,37 @@
             <div class="filters">
               <span class="chip">All</span>
               <span class="chip">New</span>
-              <span class="chip">Running</span>
-              <span class="chip">Lifestyle</span>
+              <span class="chip">Tees</span>
+              <span class="chip">Shirts</span>
               <span class="chip">Sale</span>
             </div>
           </div>
           <div>
             <div class="card">
-              <div class="img"></div>
+              <img
+                class="img"
+                src="https://images.pexels.com/photos/806627/pexels-photo-806627.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop"
+                alt="Featured drop"
+                loading="lazy"
+              />
               <div class="content">
                 <p class="name">Featured drop</p>
-                <p class="meta">Lightweight. Breathable. Built for comfort.</p>
-                <div class="price">From $89</div>
+                <p class="meta">Soft cotton basics for everyday wear.</p>
+                <div class="price">From $24</div>
               </div>
             </div>
           </div>
         </section>
 
         <section class="grid" aria-label="Product listing">
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Sprint Pro</p><p class="meta">Daily runner</p><div class="price">$109</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Urban Lite</p><p class="meta">Streetwear</p><div class="price">$99</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Cloud Max</p><p class="meta">Extra cushioning</p><div class="price">$129</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Retro 88</p><p class="meta">Classic look</p><div class="price">$119</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Trail Edge</p><p class="meta">Outdoor</p><div class="price">$139</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Flex Knit</p><p class="meta">Ultra light</p><div class="price">$89</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Commuter</p><p class="meta">Everyday</p><div class="price">$79</div></div></article>
-          <article class="card"><div class="img"></div><div class="content"><p class="name">Prime Run</p><p class="meta">Performance</p><div class="price">$149</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/9558567/pexels-photo-9558567.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Everyday Tee" loading="lazy" /><div class="content"><p class="name">Everyday Tee</p><p class="meta">Soft cotton</p><div class="price">$24</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/9558246/pexels-photo-9558246.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Oversized Fit" loading="lazy" /><div class="content"><p class="name">Oversized Fit</p><p class="meta">Relaxed silhouette</p><div class="price">$29</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/5746084/pexels-photo-5746084.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Minimal Tee" loading="lazy" /><div class="content"><p class="name">Minimal Tee</p><p class="meta">Clean essentials</p><div class="price">$22</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/9603624/pexels-photo-9603624.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Black Tee" loading="lazy" /><div class="content"><p class="name">Black Tee</p><p class="meta">Goes with everything</p><div class="price">$24</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/6046198/pexels-photo-6046198.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Linen Button-Down" loading="lazy" /><div class="content"><p class="name">Linen Button-Down</p><p class="meta">Breathable weave</p><div class="price">$44</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/4108805/pexels-photo-4108805.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Classic Oxford" loading="lazy" /><div class="content"><p class="name">Classic Oxford</p><p class="meta">Work to weekend</p><div class="price">$49</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/6568638/pexels-photo-6568638.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Striped Shirt" loading="lazy" /><div class="content"><p class="name">Striped Shirt</p><p class="meta">Timeless pattern</p><div class="price">$39</div></div></article>
+          <article class="card"><img class="img" src="https://images.pexels.com/photos/4153187/pexels-photo-4153187.jpeg?auto=compress&cs=tinysrgb&w=1200&h=900&fit=crop" alt="Camp Collar" loading="lazy" /><div class="content"><p class="name">Camp Collar</p><p class="meta">Summer-ready</p><div class="price">$36</div></div></article>
         </section>
 
         <section class="generator" aria-label="Embed generator">
@@ -339,6 +347,11 @@
               <input id="aspectRatio" class="input" type="text" value="2160:4096" placeholder="9:16 / 16:9 / 1:1" />
             </div>
 
+            <div class="field">
+              <label for="persistVideo">Persist video</label>
+              <input id="persistVideo" type="checkbox" />
+            </div>
+
             <textarea id="embedCode" class="code" readonly></textarea>
 
             <div class="actions">
@@ -353,9 +366,10 @@
       <div
         id="pipPreview"
         class="gumlet-ecommerce-video"
-        data-embed-src="https://play.gumlet.io/embed/69b8165cdc37184fc7cb2c7a"
+        data-embed-src="https://play.gumlet.io/embed/69b8165cdc37184fc7cb2c7a?v=s"
         data-corner="bottom-right"
         data-aspect-ratio="2160:4096"
+        data-persist-video="true"
       ></div>
     </main>
 
@@ -364,17 +378,20 @@
       const videoIdEl = document.getElementById('videoId');
       const cornerEl = document.getElementById('corner');
       const aspectRatioEl = document.getElementById('aspectRatio');
+      const persistVideoEl = document.getElementById('persistVideo');
       const embedCodeEl = document.getElementById('embedCode');
       const generateBtn = document.getElementById('generateBtn');
       const copyBtn = document.getElementById('copyBtn');
       const statusEl = document.getElementById('status');
+
+      persistVideoEl.checked = pipEl.dataset.persistVideo === 'true';
 
       function buildEmbedSrc(videoId) {
         const base = `https://play.gumlet.io/embed/${encodeURIComponent(videoId)}`;
         return base;
       }
 
-      function buildEmbedCode(embedSrc, corner, aspectRatio) {
+      function buildEmbedCode(embedSrc, corner, aspectRatio, persistVideo) {
         const attrs = [
           `class=\"gumlet-ecommerce-video\"`,
           `data-embed-src=\"${embedSrc}\"`,
@@ -385,13 +402,15 @@
           attrs.push(`data-aspect-ratio=\"${aspectRatio.trim()}\"`);
         }
 
+        attrs.push(`data-persist-video=\"${persistVideo ? 'true' : 'false'}\"`);
+
         const detectedScriptUrl = document
           .querySelector('script[src*="gumlet-ecommerce-video.min.js"]')
           ?.getAttribute('src');
         const scriptUrl =
           detectedScriptUrl && /^https?:\/\//i.test(detectedScriptUrl)
             ? detectedScriptUrl
-            : 'https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.1/dist/gumlet-ecommerce-video.min.js';
+            : 'https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.2/dist/gumlet-ecommerce-video.min.js';
         const closeScript = '</scr' + 'ipt>';
         const scriptLine = `<script src=\"${scriptUrl}\" async>${closeScript}`;
 
@@ -410,6 +429,7 @@
         const videoId = videoIdEl.value.trim();
         const corner = cornerEl.value;
         const aspectRatio = aspectRatioEl.value.trim();
+        const persistVideo = !!persistVideoEl.checked;
 
         if (!videoId) return;
 
@@ -417,8 +437,10 @@
         pipEl.dataset.embedSrc = embedSrc;
         pipEl.dataset.corner = corner;
         pipEl.dataset.aspectRatio = aspectRatio;
+        pipEl.dataset.persistVideo = persistVideo ? 'true' : 'false';
+        delete pipEl.dataset.persistDismiss;
 
-        embedCodeEl.value = buildEmbedCode(embedSrc, corner, aspectRatio);
+        embedCodeEl.value = buildEmbedCode(embedSrc, corner, aspectRatio, persistVideo);
 
         const addon = await waitForAddon();
         if (!addon) return;
@@ -456,6 +478,7 @@
 
       cornerEl.addEventListener('change', () => render());
       aspectRatioEl.addEventListener('input', () => render());
+      persistVideoEl.addEventListener('change', () => render());
 
       render();
     </script>
