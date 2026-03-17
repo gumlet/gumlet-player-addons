@@ -385,13 +385,15 @@
           attrs.push(`data-aspect-ratio=\"${aspectRatio.trim()}\"`);
         }
 
-        const scriptUrl = document
+        const detectedScriptUrl = document
           .querySelector('script[src*="gumlet-ecommerce-video.min.js"]')
           ?.getAttribute('src');
+        const scriptUrl =
+          detectedScriptUrl && /^https?:\/\//i.test(detectedScriptUrl)
+            ? detectedScriptUrl
+            : 'https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.1/dist/gumlet-ecommerce-video.min.js';
         const closeScript = '</scr' + 'ipt>';
-        const scriptLine = scriptUrl
-          ? `<script src=\"${scriptUrl}\" async>${closeScript}`
-          : `<script src=\"https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.1/dist/gumlet-ecommerce-video.min.js\" async>${closeScript}`;
+        const scriptLine = `<script src=\"${scriptUrl}\" async>${closeScript}`;
 
         return `<div ${attrs.join(' ')}></div>\n\n${scriptLine}`;
       }
