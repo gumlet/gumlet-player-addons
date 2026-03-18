@@ -271,7 +271,7 @@
       }
     </style>
 
-    <script src="./dist/gumlet-ecommerce-video.min.js" async></script>
+    <script src="./dist/gumlet-ecommerce-video.min.js?v=s1" async></script>
   </head>
   <body>
     <main class="page">
@@ -352,6 +352,41 @@
               <input id="persistVideo" type="checkbox" />
             </div>
 
+            <details class="field">
+              <summary>Advanced settings</summary>
+
+              <div class="formgrid" style="padding-top: 12px;">
+                <div class="field">
+                  <label for="expandedTitle">Expanded title</label>
+                  <input id="expandedTitle" class="input" type="text" placeholder="Nice to see you here" />
+                </div>
+
+                <div class="field">
+                  <label for="expandedButtonText">Expanded button text</label>
+                  <input id="expandedButtonText" class="input" type="text" placeholder="Let's connect" />
+                </div>
+
+                <div class="field">
+                  <label for="expandedButtonHref">Expanded button link</label>
+                  <input id="expandedButtonHref" class="input" type="url" placeholder="https://example.com" />
+                </div>
+
+                <div class="field">
+                  <label>Button colors</label>
+                  <input id="expandedButtonBackground" type="hidden" value="rgba(255, 56, 120, 0.96)" />
+                  <input id="expandedButtonColor" type="hidden" value="rgba(255, 255, 255, 0.96)" />
+
+                  <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <label for="expandedButtonBackgroundPicker" style="font-size: 12px; color: rgba(255,255,255,0.7);">Background</label>
+                    <input id="expandedButtonBackgroundPicker" class="input" type="color" value="#ff3878" style="width: 58px; padding: 0; height: 38px;" />
+
+                    <label for="expandedButtonColorPicker" style="font-size: 12px; color: rgba(255,255,255,0.7);">Text</label>
+                    <input id="expandedButtonColorPicker" class="input" type="color" value="#ffffff" style="width: 58px; padding: 0; height: 38px;" />
+                  </div>
+                </div>
+              </div>
+            </details>
+
             <textarea id="embedCode" class="code" readonly></textarea>
 
             <div class="actions">
@@ -379,19 +414,88 @@
       const cornerEl = document.getElementById('corner');
       const aspectRatioEl = document.getElementById('aspectRatio');
       const persistVideoEl = document.getElementById('persistVideo');
+      const expandedTitleEl = document.getElementById('expandedTitle');
+      const expandedButtonTextEl = document.getElementById('expandedButtonText');
+      const expandedButtonHrefEl = document.getElementById('expandedButtonHref');
+      const expandedButtonBackgroundEl = document.getElementById('expandedButtonBackground');
+      const expandedButtonColorEl = document.getElementById('expandedButtonColor');
+      const expandedButtonBackgroundPickerEl = document.getElementById(
+        'expandedButtonBackgroundPicker'
+      );
+      const expandedButtonColorPickerEl = document.getElementById('expandedButtonColorPicker');
       const embedCodeEl = document.getElementById('embedCode');
       const generateBtn = document.getElementById('generateBtn');
       const copyBtn = document.getElementById('copyBtn');
       const statusEl = document.getElementById('status');
 
       persistVideoEl.checked = pipEl.dataset.persistVideo === 'true';
+      expandedTitleEl.value = pipEl.dataset.expandedTitle ?? '';
+      expandedButtonTextEl.value = pipEl.dataset.expandedButtonText ?? '';
+      expandedButtonHrefEl.value = pipEl.dataset.expandedButtonHref ?? '';
+      expandedButtonBackgroundEl.value =
+        pipEl.dataset.expandedButtonBackground ?? 'rgba(255, 56, 120, 0.96)';
+      expandedButtonColorEl.value = pipEl.dataset.expandedButtonColor ?? 'rgba(255, 255, 255, 0.96)';
+
+      function clampColorChannel(value) {
+        const n = Number(value);
+        if (!Number.isFinite(n)) return 0;
+        return Math.max(0, Math.min(255, Math.round(n)));
+      }
+
+      function channelToHex(channel) {
+        return channel.toString(16).padStart(2, '0');
+      }
+
+      function tryParseHexColor(input) {
+        if (typeof input !== 'string') return null;
+        const raw = input.trim();
+        const m = raw.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+        if (!m) return null;
+        const hex = m[1];
+        if (hex.length === 3) {
+          return `#${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`.toLowerCase();
+        }
+        return `#${hex}`.toLowerCase();
+      }
+
+      function tryParseRgbaToHex(input) {
+        if (typeof input !== 'string') return null;
+        const raw = input.trim();
+        const m = raw.match(
+          /^rgba?\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})(?:\s*,\s*([0-9.]+))?\s*\)$/i
+        );
+        if (!m) return null;
+        const r = clampColorChannel(m[1]);
+        const g = clampColorChannel(m[2]);
+        const b = clampColorChannel(m[3]);
+        return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`;
+      }
+
+      function toPickerHex(input) {
+        return tryParseHexColor(input) ?? tryParseRgbaToHex(input);
+      }
+
+      expandedButtonBackgroundPickerEl.value =
+        toPickerHex(expandedButtonBackgroundEl.value) ?? expandedButtonBackgroundPickerEl.value;
+      expandedButtonColorPickerEl.value =
+        toPickerHex(expandedButtonColorEl.value) ?? expandedButtonColorPickerEl.value;
 
       function buildEmbedSrc(videoId) {
         const base = `https://play.gumlet.io/embed/${encodeURIComponent(videoId)}`;
         return base;
       }
 
-      function buildEmbedCode(embedSrc, corner, aspectRatio, persistVideo) {
+      function buildEmbedCode(
+        embedSrc,
+        corner,
+        aspectRatio,
+        persistVideo,
+        expandedTitle,
+        expandedButtonText,
+        expandedButtonHref,
+        expandedButtonBackground,
+        expandedButtonColor
+      ) {
         const attrs = [
           `class=\"gumlet-ecommerce-video\"`,
           `data-embed-src=\"${embedSrc}\"`,
@@ -404,13 +508,34 @@
 
         attrs.push(`data-persist-video=\"${persistVideo ? 'true' : 'false'}\"`);
 
+        if (expandedTitle && expandedTitle.trim().length > 0) {
+          attrs.push(`data-expanded-title=\"${expandedTitle.trim()}\"`);
+        }
+
+        if (
+          expandedButtonText &&
+          expandedButtonText.trim().length > 0 &&
+          expandedButtonHref &&
+          expandedButtonHref.trim().length > 0
+        ) {
+          attrs.push(`data-expanded-button-text=\"${expandedButtonText.trim()}\"`);
+          attrs.push(`data-expanded-button-href=\"${expandedButtonHref.trim()}\"`);
+
+          if (expandedButtonBackground && expandedButtonBackground.trim().length > 0) {
+            attrs.push(`data-expanded-button-background=\"${expandedButtonBackground.trim()}\"`);
+          }
+          if (expandedButtonColor && expandedButtonColor.trim().length > 0) {
+            attrs.push(`data-expanded-button-color=\"${expandedButtonColor.trim()}\"`);
+          }
+        }
+
         const detectedScriptUrl = document
           .querySelector('script[src*="gumlet-ecommerce-video.min.js"]')
           ?.getAttribute('src');
         const scriptUrl =
           detectedScriptUrl && /^https?:\/\//i.test(detectedScriptUrl)
             ? detectedScriptUrl
-            : 'https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.3/dist/gumlet-ecommerce-video.min.js';
+            : 'https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.4/dist/gumlet-ecommerce-video.min.js';
         const closeScript = '</scr' + 'ipt>';
         const scriptLine = `<script src=\"${scriptUrl}\" async>${closeScript}`;
 
@@ -430,6 +555,11 @@
         const corner = cornerEl.value;
         const aspectRatio = aspectRatioEl.value.trim();
         const persistVideo = !!persistVideoEl.checked;
+        const expandedTitle = expandedTitleEl.value.trim();
+        const expandedButtonText = expandedButtonTextEl.value.trim();
+        const expandedButtonHref = expandedButtonHrefEl.value.trim();
+        const expandedButtonBackground = expandedButtonBackgroundEl.value.trim();
+        const expandedButtonColor = expandedButtonColorEl.value.trim();
 
         if (!videoId) return;
 
@@ -439,7 +569,47 @@
         pipEl.dataset.aspectRatio = aspectRatio;
         pipEl.dataset.persistVideo = persistVideo ? 'true' : 'false';
 
-        embedCodeEl.value = buildEmbedCode(embedSrc, corner, aspectRatio, persistVideo);
+        if (expandedTitle) {
+          pipEl.dataset.expandedTitle = expandedTitle;
+        } else {
+          delete pipEl.dataset.expandedTitle;
+        }
+
+        if (expandedButtonText) {
+          pipEl.dataset.expandedButtonText = expandedButtonText;
+        } else {
+          delete pipEl.dataset.expandedButtonText;
+        }
+
+        if (expandedButtonHref) {
+          pipEl.dataset.expandedButtonHref = expandedButtonHref;
+        } else {
+          delete pipEl.dataset.expandedButtonHref;
+        }
+
+        if (expandedButtonBackground) {
+          pipEl.dataset.expandedButtonBackground = expandedButtonBackground;
+        } else {
+          delete pipEl.dataset.expandedButtonBackground;
+        }
+
+        if (expandedButtonColor) {
+          pipEl.dataset.expandedButtonColor = expandedButtonColor;
+        } else {
+          delete pipEl.dataset.expandedButtonColor;
+        }
+
+        embedCodeEl.value = buildEmbedCode(
+          embedSrc,
+          corner,
+          aspectRatio,
+          persistVideo,
+          expandedTitle,
+          expandedButtonText,
+          expandedButtonHref,
+          expandedButtonBackground,
+          expandedButtonColor
+        );
 
         const addon = await waitForAddon();
         if (!addon) return;
@@ -478,6 +648,19 @@
       cornerEl.addEventListener('change', () => render());
       aspectRatioEl.addEventListener('input', () => render());
       persistVideoEl.addEventListener('change', () => render());
+      expandedTitleEl.addEventListener('input', () => render());
+      expandedButtonTextEl.addEventListener('input', () => render());
+      expandedButtonHrefEl.addEventListener('input', () => render());
+
+      expandedButtonBackgroundPickerEl.addEventListener('input', () => {
+        expandedButtonBackgroundEl.value = expandedButtonBackgroundPickerEl.value;
+        render();
+      });
+
+      expandedButtonColorPickerEl.addEventListener('input', () => {
+        expandedButtonColorEl.value = expandedButtonColorPickerEl.value;
+        render();
+      });
 
       render();
     </script>

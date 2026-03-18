@@ -106,6 +106,12 @@ function mount(rootEl, options = {}) {
   const corner = options.corner ?? rootEl.dataset.corner ?? 'bottom-right';
   const aspectRatioRaw = options.aspectRatio ?? rootEl.dataset.aspectRatio ?? '9:16';
   const aspectRatio = parseAspectRatio(aspectRatioRaw) ?? { w: 9, h: 16 };
+  const expandedTitle = options.expandedTitle ?? rootEl.dataset.expandedTitle;
+  const expandedButtonText = options.expandedButtonText ?? rootEl.dataset.expandedButtonText;
+  const expandedButtonHref = options.expandedButtonHref ?? rootEl.dataset.expandedButtonHref;
+  const expandedButtonBackground =
+    options.expandedButtonBackground ?? rootEl.dataset.expandedButtonBackground;
+  const expandedButtonColor = options.expandedButtonColor ?? rootEl.dataset.expandedButtonColor;
 
   const persistVideoData = parseOptionalBoolean(rootEl.dataset.persistVideo);
   const persistVideo =
@@ -170,6 +176,52 @@ function mount(rootEl, options = {}) {
     });
     ratio.appendChild(iframe);
 
+    if (
+      expanded &&
+      ((typeof expandedTitle === 'string' && expandedTitle.trim().length > 0) ||
+        ((typeof expandedButtonText === 'string' && expandedButtonText.trim().length > 0) &&
+          (typeof expandedButtonHref === 'string' && expandedButtonHref.trim().length > 0)))
+    ) {
+      const overlay = document.createElement('div');
+      overlay.className = 'gumlet-ecommerce-video__overlay';
+
+      if (typeof expandedTitle === 'string' && expandedTitle.trim().length > 0) {
+        const titleEl = document.createElement('div');
+        titleEl.className = 'gumlet-ecommerce-video__overlay-title';
+        titleEl.textContent = expandedTitle.trim();
+        overlay.appendChild(titleEl);
+      }
+
+      if (
+        typeof expandedButtonText === 'string' &&
+        expandedButtonText.trim().length > 0 &&
+        typeof expandedButtonHref === 'string' &&
+        expandedButtonHref.trim().length > 0
+      ) {
+        const actions = document.createElement('div');
+        actions.className = 'gumlet-ecommerce-video__overlay-actions';
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'gumlet-ecommerce-video__overlay-button';
+        button.textContent = expandedButtonText.trim();
+        if (typeof expandedButtonBackground === 'string' && expandedButtonBackground.trim().length > 0) {
+          button.style.background = expandedButtonBackground.trim();
+        }
+        if (typeof expandedButtonColor === 'string' && expandedButtonColor.trim().length > 0) {
+          button.style.color = expandedButtonColor.trim();
+        }
+        button.addEventListener('click', () => {
+          window.open(expandedButtonHref.trim(), '_blank', 'noopener,noreferrer');
+        });
+
+        actions.appendChild(button);
+        overlay.appendChild(actions);
+      }
+
+      ratio.appendChild(overlay);
+    }
+
     if (!expanded) {
       const tapzone = document.createElement('div');
       tapzone.className = 'gumlet-ecommerce-video__tapzone';
@@ -203,13 +255,13 @@ function mount(rootEl, options = {}) {
     });
   }
 
-  setMode('compact');
-
   pip.appendChild(close);
   pip.appendChild(ratio);
 
   rootEl.replaceChildren();
   rootEl.appendChild(pip);
+
+  setTimeout(() => setMode('compact'), 0);
 
   function onClose() {
     if (currentMode === 'expanded') {
