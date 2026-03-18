@@ -47,6 +47,8 @@ Host that file on your CDN and use the snippet below.
   class="gumlet-ecommerce-video"
   data-embed-src="https://play.gumlet.io/embed/VIDEO_ID"
   data-corner="bottom-right"
+  data-aspect-ratio="9:16"
+  data-persist-video="true"
 ></div>
 
 <script src="https://cdn.jsdelivr.net/gh/gumlet/gumlet-player-addons@v1.3.5/dist/gumlet-ecommerce-video.min.js" async></script>
@@ -63,3 +65,14 @@ Edit these attributes in `e-commerce.html`:
 
 - `data-embed-src`: your Gumlet embed URL.
 - `data-corner`: `bottom-left` or `bottom-right`.
+- `data-aspect-ratio`: optional aspect ratio like `9:16`, `16:9`, `1:1`.
+- `data-persist-video`: `true` (default) means the close button only dismisses for the current session.
+  `false` means the dismiss state is persisted using `localStorage`.
+
+Optional expanded overlay (shown only in expanded mode and only if values are provided):
+
+- `data-expanded-title`: title text shown above the CTA.
+- `data-expanded-button-text`: CTA button label.
+- `data-expanded-button-href`: URL opened when the CTA is clicked.
+- `data-expanded-button-background`: optional button background color (e.g. `#ff3878`).
+- `data-expanded-button-color`: optional button text color (e.g. `#ffffff`).
